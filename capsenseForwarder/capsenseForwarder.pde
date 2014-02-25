@@ -34,7 +34,7 @@ void setup() {
   //print list of serial devices to console
   println(Serial.list());
   //confirm the port your arduino is connected to
-  String portName = Serial.list()[1];
+  String portName = Serial.list()[0];
   myPort = new Serial(this, portName, 9600);
 }
 
@@ -52,6 +52,7 @@ void draw() {
   }
 
   tummy_rub_val = int(map(value, 0, 140, 0, 30));
+  
   if (sb.connected()) {
     //print client name to screen
     fill(0);
@@ -59,7 +60,7 @@ void draw() {
     //print current value to screen
     textSize(10); 
     text(value, 25, 25);
-    sb.send("tummy_rub", "tummyrub" str(tummy_rub_val));
+    sb.send("tummy_rub", "tummyrub", str(tummy_rub_val));
   }
   else {
     text("Not Connected", 25, 25);
