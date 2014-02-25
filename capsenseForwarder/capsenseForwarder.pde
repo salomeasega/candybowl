@@ -26,7 +26,7 @@ void setup() {
   sb = new Spacebrew ( this ); 
 
   //add each thing you publish to
-  sb.addPublish("tummy_rub", "tummyrub", tummy_rub_val);
+  sb.addPublish("tummy_rub", "tummyrub", str(tummy_rub_val));
 
   //connect to Spacebrew
   sb.connect(server, name, description); 
@@ -34,7 +34,7 @@ void setup() {
   //print list of serial devices to console
   println(Serial.list());
   //confirm the port your arduino is connected to
-  String portName = Serial.list()[0];
+  String portName = Serial.list()[1];
   myPort = new Serial(this, portName, 9600);
 }
 
@@ -42,22 +42,6 @@ void setup() {
 void draw() {
   background(255); 
 
-  if (sb.connected()) {
-    //print client name to screen
-    fill(0);
-    text("Connected as: " + name, width/2, 25);
-    //print current value to screen
-    textSize(10); 
-    text(value, 25, 25);
-  }
-  else {
-    text("Not Connected", 25, 25);
-  }
-
-  //publish the value to spacebrew if app is connected to spacebrew
-  if (sb.connected()) {
-    sb.send("tummy_rub", str(tummy_rub_val));
-  }
 
   if (myPort.available()> 0) {
     value = myPort.read();
@@ -66,23 +50,22 @@ void draw() {
   else {
     println("Not connected");
   }
-  
-  tummy_rub_val = int(map(value, 0, 140, 0, 30)); 
-  
-//  if (value >= 0 && value <= 10) {
-//    tummy_rub_val = 0;
-//  }
-//
-//  if (value >= 11 && value <=80) {
-//    tummy_rub_val = 10;
-//  }
-//
-//  if (value >=81 && value <= 110) {
-//    tummy_rub_val = 20;
-//  }
-//  if (value >= 111) {
-//    tummy_rub_val = 30;
-//  }
+
+  tummy_rub_val = int(map(value, 0, 140, 0, 30));
+  if (sb.connected()) {
+    //print client name to screen
+    fill(0);
+    text("Connected as: " + name, width/2, 25);
+    //print current value to screen
+    textSize(10); 
+    text(value, 25, 25);
+    sb.send("tummy_rub", "tummyrub" str(tummy_rub_val));
+  }
+  else {
+    text("Not Connected", 25, 25);
+  }
+
+
   println("tummy_rub_val = " + tummy_rub_val);
   delay(10);
 }
